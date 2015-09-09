@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>File Uploader</title>
+  </head>
+  <body>
+    <% if @uploaded_file_data %>
+      <img src="<%= uploaded_file_data_url %>" />
+    <% end %>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <input name="uploadedFile" type="file" />
+      <button type="submit">Upload</button>
+    </form>
+  </body>
+</html>
+
