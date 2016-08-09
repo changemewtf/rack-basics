@@ -13,7 +13,7 @@ class Application
 
     case env['REQUEST_PATH']
     when '/'
-      return [200, { 'Content-Type' => 'text/html' }, [template.result(binding)]]
+      return [200, { 'Content-Type' => 'text/json' }, [template.result(binding)]]
     when '/upload'
       file = req.POST['uploadedFile']
       @uploaded_file_data = file[:tempfile].read
