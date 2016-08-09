@@ -1,1 +1,328 @@
-slides.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Ruby on Rack</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+        <section>
+          <h1>Ruby on Rack</h1>
+          <h4>Improve your web development with this one weird app</h4>
+          <p><small>(<em>D.H.H. hates it!</em>)</small></p>
+          <p>
+            <small><a href="mailto:max@maxcantor.net">Max Cantor</a> | <a href="http://twitter.com/mcantor">@mcantor</a></small>
+            <br />
+            <small><a href="http://www.neo.com"><img style="position: relative; top: -8px; margin-right: 10px; border: 0;" src="favicon.ico" />Neo Innovation</a> | <a href="http://www.neo.com">neo.com</a></small>
+          </p>
+          <aside class="notes">
+            <p>Hello!</p>
+            <p>I'm Max Cantor, and I'm here to inform you that Rack is really cool.</p>
+          </aside>
+        </section>
+
+        <section>
+          <h2>What is Rack?</h2>
+          <ul>
+            <li class="fragment">Web server interface</li>
+            <li class="fragment">Inspired by Python WSGI</li>
+            <li class="fragment">config.ru</li>
+          </ul>
+          <aside class="notes">
+            <p>Humble web server interface</p>
+            <p>Inspired by Python's WSGI, which is not, in fact, a skin disease</p>
+            <p>Mysterious config.ru</p>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Let's talk about...</h2>
+          <ul>
+            <li>What is Rack?</li>
+            <li>Interfaces</li>
+            <li>Why is it worth learning?</li>
+            <li>Basic Rack usage</li>
+            <li>Middleware</li>
+          </ul>
+          <aside class="notes">
+            <p>By the time we're done...</p>
+            <p>What Rack IS</p>
+            <p>Think some deep thoughts about interfaces</p>
+            <p>Reinventing the wheel</p>
+            <p>How to build basic web apps with Rack</p>
+            <p>Middleware, the Rack version of "plugins"</p>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Interfaces</h2>
+          <ul>
+            <li class="fragment">Car
+              <ul class="fragment">
+                <li>Steering Wheel</li>
+                <li>Key &amp; Ignition Slot</li>
+                <li>Pedals</li>
+                <li>Gear Shift</li>
+                <li>Gas Tank</li>
+                <li>Speedometer</li>
+                <li>Fuel Gauge</li>
+              </ul>
+            </li>
+          </ul>
+          <aside class="notes">
+            <p>First, let's just think about <em>interfaces</em> for a sec.</p>
+            <p>What are the discrete <em>things</em> you need to interact with to get your money's worth out of a car?</p>
+            (<strong>SUGGESTIONS</strong>)
+          </aside>
+        </section>
+
+        <section>
+          <h2>Interfaces</h2>
+          <ul>
+            <li class="fragment">Rails
+              <ul>
+                <li class="fragment" data-autoslide="1000">generators</li>
+                <li class="fragment" data-autoslide="750">migrations</li>
+                <li class="fragment" data-autoslide="500">validators</li>
+                <li class="fragment" data-autoslide="250">ERB templates</li>
+                <li class="fragment" data-autoslide="100">FormBuilder helpers</li>
+                <li class="fragment" data-autoslide="100">FormHelper helpers</li>
+                <li class="fragment" data-autoslide="100">strong parameters</li>
+                <li class="fragment" data-autoslide="100">CSRF tokens</li>
+                <li class="fragment" data-autoslide="100">respond_to blocks</li>
+                <li class="fragment" data-autoslide="100">layouts</li>
+                <li class="fragment" data-autoslide="100">partials</li>
+                <li class="fragment" data-autoslide="100">instance variables</li>
+                <li class="fragment" data-autoslide="100">session storage</li>
+                <li class="fragment" data-autoslide="100">flash storage</li>
+                <li class="fragment" data-autoslide="100">RESTful resources</li>
+                <li class="fragment">routing</li>
+              </ul>
+            </li>
+          </ul>
+          <aside class="notes">
+            <p>Now how about Rails?</p>
+            <p>This is fine, it works</p>
+            <p>Adds a lot of stuff</p>
+            <p>It can result in some mystery</p>
+            <p>Basic questions: How do I upload a file?</p>
+          </aside>
+        </section>
+
+        <!--
+          - (~10 min.) What is Rack?
+              - Rack "Hello World"
+              - Rack and Rails ultimately speak the same language: HTTP
+              - Rails is a Rack app
+              - Anything with a `call()` method that takes a Hash of HTTP request & environment data, and returns a three-item Array containing a Hash of headers, a numeric HTTP status code, and an enumerable body, is a bonafide Rack app.
+              - `config.ru` is the conventional filename for `rackup`, the Rack app runner
+        //-->
+
+        <section>
+          <h2>Interfaces</h2>
+          <h3>Rack</h3>
+          <ul>
+            <li>
+              <strong>Input (Hash)</strong>
+              <ul>
+                <li class="fragment">call() method</li>
+                <li class="fragment">Request Environment</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Return (Array)</strong>
+              <ul>
+                <li class="fragment">Numeric Status Code</li>
+                <li class="fragment">Header Hash</li>
+                <li class="fragment">Enumerable Body</li>
+              </ul>
+            </li>
+          </ul>
+          <aside class="notes">
+            Anything with a `call()` method that takes a Hash of HTTP request &amp; environment data, and returns a three-item Array containing a Hash of headers, a numeric HTTP status code, and an enumerable body, is a bonafide Rack app.
+          </aside>
+        </section>
+
+        <section>
+          <pre style="font-size: 35px;"><code style="max-height: 600px;" data-trim>
+require 'rack'
+
+class Application
+  def call(request_environment)
+    return [
+      200,
+      { "Content-Type" => "text/plain" },
+      [ "Hello, world!" ]
+    ]
+  end
+end
+
+Rack::Handler::WEBrick.run(Application.new)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>HTTP</h2>
+          <ul>
+            <li>Requests</li>
+            <li>Responses</li>
+            <li>Headers</li>
+            <li>Bodies</li>
+          </ul>
+          <aside class="notes">
+            Rack and Rails ultimately both speak the same language: HTTP
+          </aside>
+        </section>
+
+        <section>
+          <h2>Why Rack?</h2>
+          <aside class="notes">
+            Why learn Rack if Rails exist?
+          </aside>
+        </section>
+
+        <section data-background="wheel-of-stone-p.com-78486995.jpg">
+          <blockquote style="background-color:rgba(255,255,255,0.5);">
+            Reinventing the wheel might not get you a better wheel, but it will teach you a hell of a lot about building better cars and roads.
+          </blockquote>
+          <aside class="notes">
+            <p>Not to mention, you'll also be an expert on wheels!</p>
+            <p>And of course...</p>
+          </aside>
+        </section>
+
+        <section data-background="assurance-tripletred-side.jpg">
+          <aside class="notes">
+            <ul>
+              <li>You occasionally end up with a better wheel.</li>
+              <li>Learning Rack means learning HTTP.</li>
+              <li>Learning HTTP means demystifying 90% of what Rails does</li>
+              <li>(the other 90% is ActiveRecord)</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <strong>Web frameworks are leaky abstractions</strong>
+          <aside class="notes">
+            <p>Someday, web frameworks like Rails will be perfect</p>
+            <p>Right now: if you don't speak HTTP, you have no safety net</p>
+            <p>If you get lost doing something with Rails, that's it</p>
+          </aside>
+        </section>
+
+        <section>
+          <pre style="font-size: 35px;"><code style="max-height: 600px;" data-trim>
+def call(env)
+  return [
+    302,
+    { "Location" => "http://www.google.com" },
+    [ "GO 'WAY!" ]
+  ]
+end
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Middleware</h2>
+          <p>There's an <s>app</s> <em>middleware</em> for that.</p>
+          <aside class="notes">
+            Middleware is how Rack does separation of concerns
+          </aside>
+        </section>
+
+        <section data-background="russian_dolls.jpg" data-background-size="1280px">
+          <aside class="notes">
+            <p>"A middleware" is a Rack app that takes another Rack app in its constructor, and wraps its `call()` method with its own.</p>
+            <p>Like wonderful, poorly-documented Matroshka dolls. (slide of Russian dolls)</p>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Available Middleware</h2>
+          <ul>
+            <li>Routing</li>
+            <li>CSRF</li>
+            <li>Static File Handling</li>
+            <li>Debugging</li>
+            <li>... and much more!</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>config.ru &amp; rackup</h2>
+          <aside class="notes">
+            `config.ru` is the conventional filename for `rackup`, the Rack app runner
+          </aside>
+        </section>
+
+        <!--
+              - Rack::Builder just takes care of the chained constructor calls for you (slide: side-by-side comparison)
+              - As far as Rack is concerned, there's only one "app": the outermost middleware that it passes requests to and receives responses from. There could be zero or a dozen layers within.
+        //-->
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1280,
+
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
